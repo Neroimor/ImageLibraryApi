@@ -32,5 +32,6 @@ build/
 ### VS Code ###
 .vscode
 
-# Добавьте игнорирование для properties.yml
-application.yml
+# Игнорим русурсы
+/src/main/resources/
+

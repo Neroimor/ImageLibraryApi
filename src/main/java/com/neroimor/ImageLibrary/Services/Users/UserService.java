@@ -32,14 +32,20 @@ public class UserService {
     private String connectedDB;
     @Value("${setingUsers.salt}")
     private String saltPassword;
+    @Value("${textEmailRegister.subject}")
+    private String subjectRegister;
+    @Value("${textEmailRegister.text}")
+    private String registerText;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     /*
@@ -60,7 +66,9 @@ public class UserService {
 
             if (user.isEmpty()) {
                 log.info("Пользователь отсутсвует, начало регистрации");
-                registerUserToUser(registerUser);
+                var regUser = registerUserToUser(registerUser);
+                String textRegisterAndUID = registerText.concat("\n"+regUser.getCodeuid());
+                sendUidIntoMail(regUser,subjectRegister,textRegisterAndUID);
                 log.info("Пользовватель зарегестрирован и добавлен в базу данных, нужна проверка");
                 return ResponseEntity.status(HttpStatus.CREATED).body(userRegister);
             } else {
@@ -81,13 +89,24 @@ public class UserService {
 
     private User registerUserToUser(RegisterUser registerUser) {
         var user = new User();
-        String finalPassword = passwordEncoder.encode(registerUser.getPassword());
+        String finalPassword = passwordEncoder.encode(registerUser.getPassword()+saltPassword);
         user.setPassword(finalPassword);
         user.setNickname(registerUser.getNickname());
         user.setEmail(registerUser.getEmail());
         user.setROLE(role);
         user.setCreated_at(new Date());
+
+        log.info("Данные о пользователе переведены");
         return userRepository.save(user);
+    }
+
+    private void sendUidIntoMail(User user,String subject,String message) {
+        log.info("Отрпалвено письмо о {}", subject);
+        emailService.sendSimpleEmail(
+                user.getEmail(),
+                subject,
+                message
+        );
     }
 
 
