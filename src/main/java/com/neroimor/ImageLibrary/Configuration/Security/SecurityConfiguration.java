@@ -17,39 +17,56 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+//Класс конфигурации безопасности
+//Security configuration class
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    //Подключение бина по генерации и проверки токена
+    //Connecting a bean for token generation and verification
     private final JwtTokenProvider jwtTokenProvider;
 
     public SecurityConfiguration(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    //Подключение кодера пароля
+    //Connecting a password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+
+    //Настройка фильтра безопасности
+    //Security filter settings
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(ign -> ign
-                        .ignoringRequestMatchers("/api/auth/login", "/api/auth/register"))
+                        .ignoringRequestMatchers(
+                                "/api/auth/login",  //отключает CSRF-защиту для некоторых эндпоинтов.
+                                "/api/auth/register"))//disables CSRF protection for some endpoints.
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()  // Разрешаем доступ к этим маршрутам без авторизации
-                        .requestMatchers("/api/auth/user").authenticated()  // Разрешаем доступ к этим маршрутам без авторизации
-                        .anyRequest().authenticated()  // Все остальные маршруты требуют авторизации
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/register")// Разрешаем доступ к этим маршрутам без авторизации
+                        .permitAll()  // Allow access to these routes without authorization
+                        .anyRequest() //Requires authorization
+                        .authenticated()  // Все остальные маршруты требуют авторизации
                 )
-                .exceptionHandling(e -> e
+                .exceptionHandling(e -> e // // Status 401 for unauthorized
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))  // Статус 401 для неавторизованных
                 )
-                .addFilterBefore(jwtAuthenticationFilter(),
+                .addFilterBefore(jwtAuthenticationFilter(), // Adding a filter for JWT;
                         UsernamePasswordAuthenticationFilter.class); // Добавление фильтра для JWT;
         return http.build();
     }
 
+    //Проверка токена
+    //Token verification
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(jwtTokenProvider);
