@@ -3,7 +3,7 @@ package com.neroimor.ImageLibrary.Controllers.Management;
 
 import com.neroimor.ImageLibrary.Components.JWTComponent.JwtTokenProvider;
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
-import com.neroimor.ImageLibrary.Services.UserService;
+import com.neroimor.ImageLibrary.Services.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +24,7 @@ public class UserLoginController {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> loginData) {
