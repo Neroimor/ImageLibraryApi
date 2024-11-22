@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -16,10 +18,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name="nickname")
+    private String nickname;
     @Column(name="email")
     private String email;
     @Column(name="password")
     private String password;
-    @Column(name="provider")
-    private String provider;
+    @Column(name="role")
+    private String ROLE;
+    @Column(name="created_at")
+    private Date created_at;
 }
