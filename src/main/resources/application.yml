@@ -6,16 +6,21 @@ spring:
     username: postgres
     password: 4521JKMN
     driver-class-name: org.postgresql.Driver
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: admyaya@yandex.ru
+    password: zuslsfazsvjfxjrn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: YOUR_GOOGLE_CLIENT_ID
-            client-secret: YOUR_GOOGLE_CLIENT_SECRET
-            redirect-uri: "{baseUrl}/api/auth/oauth2/callback"
-            scope: openid, profile, email
 
 jwt:
   secret: mySuperSecretKeydasdas122321123122132dagadfgg
@@ -25,4 +30,23 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
+
+
+
+
+
+setingUsers:
+  rolle: USER
+  salt: QpwkSlk1kdfDlmui1owd!!3823jf
+
+registerResponse:
+  createdUser: Пользователь зарегистрирован но не верефицирован
+  userFoundAndNotVerefied: Пользователь уже зарегестрировано но он не верефицирован
+  userFound: Пользователь зарегестрирован
+
+errorResponseServer:
+  conectedDB: Ошибка сервера подключение к базе данных
+
+
+
 

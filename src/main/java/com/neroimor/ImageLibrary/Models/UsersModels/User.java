@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+
+//todo продумать систему подписок
+//todo Что еще добавить
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,4 +32,8 @@ public class User {
     private String ROLE;
     @Column(name="created_at")
     private Date created_at;
+    @Column(name = "verified")
+    private boolean verified;
+    @Column(name = "codeuid")
+    private String codeuid;
 }

@@ -1,17 +1,17 @@
 package com.neroimor.ImageLibrary.Controllers.Management;
 
-import com.neroimor.ImageLibrary.Components.JWTComponent.JwtTokenProvider;
-import com.neroimor.ImageLibrary.Models.UsersModels.User;
-import com.neroimor.ImageLibrary.Services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
+import com.neroimor.ImageLibrary.Services.Users.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/reg")
+@Slf4j
 public class UserRegisterController {
 
     private final UserService userService;
@@ -22,11 +22,9 @@ public class UserRegisterController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody Map<String, String> userData) {
-        String email = userData.get("email");
-        String password = userData.get("password");
-        userService.registerUser(email, password);
-        return "User registered successfully";
+    public ResponseEntity<String> register(@RequestBody RegisterUser registerUser) {
+        log.info("Начата регистрация нового пользователя");
+        return userService.registerUser(registerUser);
     }
 
 
