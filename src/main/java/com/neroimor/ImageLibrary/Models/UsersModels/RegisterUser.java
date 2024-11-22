@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class RegisterUser {
     private String nickname;
     private String password;
+    private String repitePassword;
     private String email;
 }
