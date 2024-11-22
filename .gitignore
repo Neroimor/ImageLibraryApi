@@ -33,4 +33,4 @@ build/
 .vscode
 
 # Добавьте игнорирование для properties.yml
-properties.yml
+application.yml
