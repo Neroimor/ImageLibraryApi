@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ImageLibrary
+  datasource:
+    url: jdbc:postgresql://localhost:5432/imagelibrary
+    username: postgres
+    password: 4521JKMN
+    driver-class-name: org.postgresql.Driver
