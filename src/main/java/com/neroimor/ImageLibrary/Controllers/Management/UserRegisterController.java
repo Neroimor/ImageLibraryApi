@@ -1,7 +1,7 @@
 package com.neroimor.ImageLibrary.Controllers.Management;
 
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
-import com.neroimor.ImageLibrary.Services.Users.UserService;
+import com.neroimor.ImageLibrary.Services.Users.RegisterUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import java.util.Map;
 @Slf4j
 public class UserRegisterController {
 
-    private final UserService userService;
+    private final RegisterUserService userService;
 
     @Autowired
-    public UserRegisterController(UserService userService) {
+    public UserRegisterController(RegisterUserService userService) {
         this.userService = userService;
     }
 
