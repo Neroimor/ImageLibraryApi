@@ -1,5 +1,7 @@
 package com.neroimor.ImageLibrary.Services.Users;
 
+import com.neroimor.ImageLibrary.Components.ErrorComoponent.DataError;
+import com.neroimor.ImageLibrary.Components.Password.PasswordComponent;
 import com.neroimor.ImageLibrary.Components.Properties.AppSettings;
 import com.neroimor.ImageLibrary.Components.UID.GeneratorUID;
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
@@ -27,18 +29,24 @@ public class UserService {
     private final EmailService emailService;
     private final GeneratorUID generatorUID;
     private final AppSettings appSettings;
+    private final DataError dataError;
+    private final PasswordComponent passwordComponent;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        EmailService emailService,
                        GeneratorUID generatorUID,
-                       AppSettings appSettings) {
+                       AppSettings appSettings,
+                       DataError dataError,
+                       PasswordComponent passwordComponent) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.generatorUID = generatorUID;
         this.appSettings = appSettings;
+        this.dataError = dataError;
+        this.passwordComponent = passwordComponent;
     }
 
     @Transactional
@@ -53,7 +61,7 @@ public class UserService {
                 return userRegisterIsPresent(user, registerUser);
             }
         } catch (DataAccessException e) {
-            return dataAccessError(e);
+            return dataError.dataAccessError(e);
         }
     }
 
@@ -66,7 +74,7 @@ public class UserService {
                     .getCreatedUser()
                     + "\n" + regUser.get()
                     .getCodeuid();
-            sendIntoMail(regUser.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
+            emailService.sendIntoMail(regUser.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
             log.info("Пользователь зарегистрирован и добавлен в базу данных, нужна проверка");
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     appSettings.getRegisterResponse().getCreatedUser());
@@ -79,11 +87,11 @@ public class UserService {
 
     private ResponseEntity<String> userRegisterIsPresent(Optional<User> user, RegisterUser registerUser) {
         if (!user.get().isVerified()) {
-            if (checkPassword(registerUser.getPassword(), user.get().getPassword())) {
+            if (passwordComponent.checkPassword(registerUser.getPassword(), user.get().getPassword())) {
                 log.info("Пользователь уже существует. Отправлен новый код");
                 String textRegisterAndUID = appSettings.getRegisterResponse().getCreatedUser()
                         + "\n" + user.get().getCodeuid();
-                sendIntoMail(user.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
+                emailService.sendIntoMail(user.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(
                         appSettings.getRegisterResponse().getUserFoundAndNotVerefied());
             } else {
@@ -98,7 +106,8 @@ public class UserService {
         }
     }
 
-    private ResponseEntity<String> userVerified(String email, String codeuid) {
+    @Transactional
+    public ResponseEntity<String> userVerified(String email, String codeuid) {
         try {
             log.info("Начата проверка пользователя");
             Optional<User> user = userRepository.findByEmail(email);
@@ -121,7 +130,7 @@ public class UserService {
                         appSettings.getErrorResponseServer().getUserNotFound());
             }
         } catch (DataAccessException e) {
-            return dataAccessError(e);
+            return dataError.dataAccessError(e);
         }
     }
 
@@ -141,24 +150,6 @@ public class UserService {
             return userRepository.save(user);
         }
         return null;
-    }
-
-    private boolean checkPassword(String password, String secretPassword) {
-        return passwordEncoder.matches(password + appSettings.getSettingUsers().getSalt(), secretPassword);
-    }
-
-    private void sendIntoMail(User user, String subject, String message) {
-        log.info("Отправлено письмо о {}", subject);
-        emailService.sendSimpleEmail(
-                user.getEmail(),
-                subject,
-                message
-        );
-    }
-
-    private ResponseEntity<String> dataAccessError(DataAccessException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(appSettings.getErrorResponseServer().getConnectedDB() + "\n" + e.getMessage());
     }
 }
 

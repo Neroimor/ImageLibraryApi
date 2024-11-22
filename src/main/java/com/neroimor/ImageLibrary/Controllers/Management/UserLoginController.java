@@ -25,6 +25,7 @@ public class UserLoginController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, String> loginData) {
         String email = loginData.get("email");

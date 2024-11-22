@@ -22,15 +22,15 @@ public class UserRegisterController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterUser registerUser) {
+    public ResponseEntity<String> registerUsers(@RequestBody RegisterUser registerUser) {
         log.info("Начата регистрация нового пользователя");
         return userService.registerUser(registerUser);
     }
 
-
-    //To do testing
-    @GetMapping("user")
-    public String hello(){
-        return "Hello World";
+    @PostMapping("/register/verification")
+    public ResponseEntity<String> verificationUsers(@RequestBody Map<String, String> dataUser) {
+        log.info("Начата верификация пользователя");
+        return userService.userVerified(dataUser.get("email"), dataUser.get("uid"));
     }
+
 }

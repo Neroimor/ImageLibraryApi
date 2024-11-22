@@ -1,5 +1,6 @@
 package com.neroimor.ImageLibrary.Services.Users;
 
+import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,12 +21,22 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendSimpleEmail(String to, String subject, String text) {
+    private void sendSimpleEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
         message.setFrom(emailSenderAddress);
         mailSender.send(message);
+    }
+
+
+    public void sendIntoMail(User user, String subject, String message) {
+        log.info("Отправлено письмо о {}", subject);
+        sendSimpleEmail(
+                user.getEmail(),
+                subject,
+                message
+        );
     }
 }
