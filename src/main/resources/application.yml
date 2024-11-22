@@ -6,3 +6,23 @@ spring:
     username: postgres
     password: 4521JKMN
     driver-class-name: org.postgresql.Driver
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID
+            client-secret: YOUR_GOOGLE_CLIENT_SECRET
+            redirect-uri: "{baseUrl}/api/auth/oauth2/callback"
+            scope: openid, profile, email
+
+jwt:
+  secret: mySuperSecretKeydasdas122321123122132dagadfgg
+  expiration: 3600000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
