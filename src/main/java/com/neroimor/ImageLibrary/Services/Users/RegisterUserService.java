@@ -53,7 +53,6 @@ public class RegisterUserService {
         log.info("Подключение к базе данных и проверка пользователя на отсутствие");
         try {
             Optional<User> user = userRepository.findByEmail(registerUser.getEmail());
-
             if (user.isEmpty()) {
                 return userRegisterIsEmpty(registerUser);
             } else {
@@ -70,17 +69,19 @@ public class RegisterUserService {
         if (regUser.isPresent()) {
             String textRegisterAndUID = appSettings
                     .getRegisterResponse()
-                    .getCreatedUser()
+                    .getConfirmYourEmail()
                     + "\n" + regUser.get()
                     .getCodeuid();
-            emailService.sendIntoMail(regUser.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
+            emailService.sendIntoMail(regUser.get(),
+                    appSettings.getRegisterResponse()
+                            .getConfirmYourEmailSubject(), textRegisterAndUID);
             log.info("Пользователь зарегистрирован и добавлен в базу данных, нужна проверка");
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     appSettings.getRegisterResponse().getCreatedUser());
         } else {
             log.info("Повторный пароль не совпадает");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    appSettings.getRegisterResponse().getPasswordDontMatch());
+                    appSettings.getRegisterResponse().getPasswordsDontMatch());
         }
     }
 
@@ -88,11 +89,15 @@ public class RegisterUserService {
         if (!user.get().isVerified()) {
             if (passwordComponent.checkPassword(registerUser.getPassword(), user.get().getPassword())) {
                 log.info("Пользователь уже существует. Отправлен новый код");
-                String textRegisterAndUID = appSettings.getRegisterResponse().getCreatedUser()
+                String textRegisterAndUID = appSettings
+                        .getRegisterResponse()
+                        .getConfirmYourEmail()
                         + "\n" + user.get().getCodeuid();
-                emailService.sendIntoMail(user.get(), appSettings.getRegisterResponse().getUserFound(), textRegisterAndUID);
+                emailService.sendIntoMail(user.get(),
+                        appSettings.getRegisterResponse()
+                                .getConfirmYourEmailSubject(), textRegisterAndUID);
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                        appSettings.getRegisterResponse().getUserFoundAndNotVerefied());
+                        appSettings.getRegisterResponse().getUserFoundAndNotVerified());
             } else {
                 log.info("Неверный пароль");
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(
@@ -117,11 +122,11 @@ public class RegisterUserService {
                     userRepository.save(user.get());
                     log.info("Код верен, пользователь подтверждён");
                     return ResponseEntity.status(HttpStatus.OK).body(
-                            appSettings.getRegisterResponse().getUserVerefied());
+                            appSettings.getRegisterResponse().getUserVerified());
                 } else {
                     log.info("Код не верен!");
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                            appSettings.getRegisterResponse().getErrorUID());
+                            appSettings.getRegisterResponse().getErrorUid());
                 }
             } else {
                 log.info("Пользователя нет");
@@ -138,11 +143,11 @@ public class RegisterUserService {
             var user = new User();
             String finalPassword = passwordEncoder.encode(
                     registerUser.getPassword()
-                    + appSettings.getSettingUsers().getSalt());
+                            + appSettings.getSettingUsers().getSalt());
             user.setPassword(finalPassword);
             user.setNickname(registerUser.getNickname());
             user.setEmail(registerUser.getEmail());
-            user.setROLE(appSettings.getSettingUsers().getRolle());
+            user.setROLE(appSettings.getSettingUsers().getRole());
             user.setCreated_at(new Date());
             user.setCodeuid(generatorUID.generatorUID());
             log.info("Данные о пользователе переведены");

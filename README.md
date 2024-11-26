@@ -6,8 +6,9 @@
 Регистрация происходит из двух этапов
 1) Отправка данных см. модель `RegisterUser`
 2) Верификация через uid отправленный на почту
-Авторизация работает по модели `LoginData`
-
+## Тестинг регистрации
+Тесты работают только после настройки конфигурационного файла.
+Для этого настройте почту для smpt и настройте базу данных
 ## Запуск
 Для запуска приложений требуется поставить и настроить конфигурационный файл:
 ```yml
@@ -43,27 +44,29 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
 
-settingsRegister:
-  settingUsers:
-    rolle: "USER"
+settings-register:
+  setting-users:
+    role: "USER"
     salt: "randomSaltValue"
-  registerResponse:
-    createdUser: "Пользователь успешно зарегистрирован"
-    userFoundAndNotVerefied: "Пользователь найден, но не подтверждён"
-    userFound: "Пользователь найден"
-    userVerefied: "Пользователь подтверждён"
-    errorUID: "Неверный код подтверждения"
-    notcorrectPassword: "Пароль неверен"
-    passwordDontMatch: "Пароли не совпадают"
-  errorResponseServer:
-    connectedDB: "Ошибка при подключении к базе данных"
-    userNotFound: "Пользователь не найден"
-    userPasswordNotCorrect: "Неверный пароль"
-  loginMoment:
-    unauthorized: "Неверный логин или пароль"
-    userNotFound: "Пользоывткль не найден"
-    userNotVerified: "Пользователь не верефицирован"
+  register-response:
+    created-user: "Пользователь успешно зарегистрирован"
+    user-found-and-not-verified: "Пользователь найден, но не подтверждён"
+    user-found: "Пользователь найден"
+    user-verified: "Пользователь подтверждён"
+    error-uid: "Неверный код подтверждения"
+    incorrect-password: "Пароль неверен"
+    passwords-dont-match: "Пароли не совпадают"
+    confirm-your-email: "Подтвеждение регистрации"
+    confirm-your-email-subject: "Подтвеждение регистрации"
 
+  error-response-server:
+    connected-db: "Ошибка при подключении к базе данных"
+    user-not-found: "Пользователь не найден"
+    user-password-not-correct: "Неверный пароль"
+  login-moment:
+    unauthorized: "Неверный логин или пароль"
+    user-not-found: "Пользователь не найден"
+    user-not-verified: "Пользователь не верифицирован"
 ```
 Далее надо создать таблицу в базе данных (используется PostgresSQL)
 ```sql

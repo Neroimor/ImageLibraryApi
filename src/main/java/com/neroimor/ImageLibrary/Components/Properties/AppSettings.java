@@ -5,37 +5,42 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "settingsRegister")
+@ConfigurationProperties(prefix = "settings-register")
 @Data
 public class AppSettings {
-
     private SettingUsers settingUsers;
     private RegisterResponse registerResponse;
     private ErrorResponseServer errorResponseServer;
     private LoginMoment loginMoment;
 
+
     @Data
     public static class SettingUsers {
-        private String rolle;
+        private String role;
         private String salt;
+
     }
 
     @Data
     public static class RegisterResponse {
         private String createdUser;
-        private String userFoundAndNotVerefied;
+        private String userFoundAndNotVerified;
         private String userFound;
-        private String userVerefied;
-        private String errorUID;
-        private String notcorrectPassword;
-        private String passwordDontMatch;
+        private String userVerified;
+        private String errorUid;
+        private String incorrectPassword;
+        private String passwordsDontMatch;
+        private String confirmYourEmail;
+        private String confirmYourEmailSubject;
+
     }
 
     @Data
     public static class ErrorResponseServer {
-        private String connectedDB;
+        private String connectedDb;
         private String userNotFound;
         private String userPasswordNotCorrect;
+
     }
 
     @Data
