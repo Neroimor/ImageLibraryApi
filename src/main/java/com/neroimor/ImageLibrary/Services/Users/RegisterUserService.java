@@ -142,8 +142,7 @@ public class RegisterUserService {
         if (registerUser.getPassword().equals(registerUser.getRepitePassword())) {
             var user = new User();
             String finalPassword = passwordEncoder.encode(
-                    registerUser.getPassword()
-                            + appSettings.getSettingUsers().getSalt());
+                    registerUser.getPassword()+appSettings.getSettingUsers().getSalt());
             user.setPassword(finalPassword);
             user.setNickname(registerUser.getNickname());
             user.setEmail(registerUser.getEmail());
