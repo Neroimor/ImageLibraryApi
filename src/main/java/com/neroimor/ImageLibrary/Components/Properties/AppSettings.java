@@ -12,6 +12,7 @@ public class AppSettings {
     private SettingUsers settingUsers;
     private RegisterResponse registerResponse;
     private ErrorResponseServer errorResponseServer;
+    private LoginMoment loginMoment;
 
     @Data
     public static class SettingUsers {
@@ -35,5 +36,12 @@ public class AppSettings {
         private String connectedDB;
         private String userNotFound;
         private String userPasswordNotCorrect;
+    }
+
+    @Data
+    public static class LoginMoment {
+        private String unauthorized;
+        private String userNotFound;
+        private String userNotVerified;
     }
 }

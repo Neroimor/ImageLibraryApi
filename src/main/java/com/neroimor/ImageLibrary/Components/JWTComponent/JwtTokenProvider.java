@@ -22,10 +22,11 @@ public class JwtTokenProvider {
     private void init() {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
-    public String generateToken(String email){
+    public String generateToken(String email, String role){
         init();
         return Jwts.builder()
                 .setSubject(email)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256) // Используем новый метод
@@ -41,6 +42,16 @@ public class JwtTokenProvider {
                 .getBody()
                 .getSubject();
     }
+
+    public String getRoleFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class); // Возвращаем роль из токена
+    }
+
 
     // Проверка валидности JWT токена
     public boolean validateToken(String token) {
