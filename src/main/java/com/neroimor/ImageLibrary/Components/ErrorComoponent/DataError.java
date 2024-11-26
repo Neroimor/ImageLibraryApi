@@ -18,6 +18,6 @@ public class DataError {
 
     public ResponseEntity<String> dataAccessError(DataAccessException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(appSettings.getErrorResponseServer().getConnectedDB() + "\n" + e.getMessage());
+                .body(appSettings.getErrorResponseServer().getConnectedDb() + "\n" + e.getMessage());
     }
 }

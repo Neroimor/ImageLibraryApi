@@ -57,7 +57,7 @@ public class LoginService {
 
     private ResponseEntity<String> Authentication(Optional<User> user, String password) {
         if (user.isPresent()) {
-            if (passwordComponent.checkPassword(user.get().getPassword(), password)) {
+            if (passwordComponent.checkPassword(password,user.get().getPassword())) {
                 if (user.get().isVerified()) {
                     log.info("Пользователь вошел");
                     String token = jwtTokenProvider
