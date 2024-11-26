@@ -38,6 +38,10 @@ public class AppSettings {
         private String userPasswordNotCorrect;
     }
 
-    private class LoginMoment {
+    @Data
+    public static class LoginMoment {
+        private String unauthorized;
+        private String userNotFound;
+        private String userNotVerified;
     }
 }

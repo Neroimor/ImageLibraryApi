@@ -26,6 +26,7 @@ public class LoginService {
     private final UserRepository userRepository;
     private final PasswordComponent passwordComponent;
     private final JwtTokenProvider jwtTokenProvider;
+    private final EmailService emailService;
 
     @Autowired
     public LoginService(DataError dataError,
@@ -33,36 +34,72 @@ public class LoginService {
                         GeneratorUID generatorUID,
                         UserRepository userRepository,
                         PasswordComponent passwordComponent,
-                        JwtTokenProvider jwtTokenProvider) {
+                        JwtTokenProvider jwtTokenProvider, EmailService emailService) {
         this.dataError = dataError;
         this.appSettings = appSettings;
         this.generatorUID = generatorUID;
         this.userRepository = userRepository;
         this.passwordComponent = passwordComponent;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.emailService = emailService;
     }
 
 
-    public ResponseEntity<String> login(String email, String password){
+    public ResponseEntity<String> login(String email, String password) {
         try {
             Optional<User> user = userRepository.findByEmail(email);
             log.info("Начинается процесс аунтификации");
-            return Authentication(user,password);
-        } catch (DataAccessException e){
+            return Authentication(user, password);
+        } catch (DataAccessException e) {
             return dataError.dataAccessError(e);
         }
     }
 
-    private ResponseEntity<String> Authentication(Optional<User> user,String password){
-        if(user.isPresent()){
-            if(passwordComponent.checkPassword(user.get().getPassword(),password)){
-                log.info("Пользователь вошел");
-             String token = jwtTokenProvider
-                     .generateToken(user.get().getEmail(),user.get().getROLE());
-             ResponseEntity.status(HttpStatus.OK).body(token);
-            }
-        }
+    private ResponseEntity<String> Authentication(Optional<User> user, String password) {
+        if (user.isPresent()) {
+            if (passwordComponent.checkPassword(user.get().getPassword(), password)) {
+                if (user.get().isVerified()) {
+                    log.info("Пользователь вошел");
+                    String token = jwtTokenProvider
+                            .generateToken(user.get().getEmail(), user.get().getROLE());
+                    return ResponseEntity.status(HttpStatus.OK).body(token);
+                } else {
+                    try {
+                        user.get().setCodeuid(generatorUID.generatorUID());
+                        userRepository.save(user.get());
+                        log.info("Пользователь не может войти так как он не верефицирован, отправили код ему на почту");
+                        String textRegisterAndUID = appSettings
+                                .getRegisterResponse()
+                                .getCreatedUser()
+                                + "\n" + user.get()
+                                .getCodeuid();
+                        emailService.sendIntoMail(user.get(),
+                                appSettings.getRegisterResponse().getUserFound(),
+                                textRegisterAndUID);
+                        return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(appSettings
+                                .getLoginMoment()
+                                .getUserNotVerified());
+                    }
+                    catch (DataAccessException e) {
+                        return dataError.dataAccessError(e);
+                    }
+                }
 
-        return null;
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(appSettings
+                        .getLoginMoment()
+                        .getUnauthorized());
+            }
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(appSettings
+                    .getLoginMoment()
+                    .getUserNotFound());
+        }
     }
 }
