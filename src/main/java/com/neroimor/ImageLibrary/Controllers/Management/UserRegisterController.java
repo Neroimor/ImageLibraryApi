@@ -2,6 +2,7 @@ package com.neroimor.ImageLibrary.Controllers.Management;
 
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
 import com.neroimor.ImageLibrary.Services.Users.RegisterUserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserRegisterController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUsers(@RequestBody RegisterUser registerUser) {
+    public ResponseEntity<String> registerUsers(@Valid @RequestBody RegisterUser registerUser) {
         log.info("Начата регистрация нового пользователя");
         return userService.registerUser(registerUser);
     }

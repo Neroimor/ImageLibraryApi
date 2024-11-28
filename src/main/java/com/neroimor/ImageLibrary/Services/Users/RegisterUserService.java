@@ -6,6 +6,7 @@ import com.neroimor.ImageLibrary.Components.Properties.AppSettings;
 import com.neroimor.ImageLibrary.Components.UID.GeneratorUID;
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -49,7 +50,7 @@ public class RegisterUserService {
     }
 
     @Transactional
-    public ResponseEntity<String> registerUser(RegisterUser registerUser) {
+    public ResponseEntity<String> registerUser(@Valid RegisterUser registerUser) {
         log.info("Подключение к базе данных и проверка пользователя на отсутствие");
         try {
             Optional<User> user = userRepository.findByEmail(registerUser.getEmail());
