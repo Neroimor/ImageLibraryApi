@@ -47,12 +47,12 @@ public class SecurityConfiguration {
                 .csrf(ign -> ign
                         .ignoringRequestMatchers(
                                 "/api/auth/**",  //отключает CSRF-защиту для некоторых эндпоинтов.
-                                "/api/auth/**"))//disables CSRF protection for some endpoints.
+                                "/api/reg/**"))//disables CSRF protection for some endpoints.
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/api/auth/**")// Разрешаем доступ к этим маршрутам без авторизации
+                                "/api/reg/**")// Разрешаем доступ к этим маршрутам без авторизации
                         .permitAll()  // Allow access to these routes without authorization
                         .anyRequest() //Requires authorization
                         .authenticated()  // Все остальные маршруты требуют авторизации

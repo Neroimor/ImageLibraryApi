@@ -7,16 +7,28 @@ import com.neroimor.ImageLibrary.Repository.UserRepository;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 
 @SpringBootTest
 @Transactional
+@AutoConfigureMockMvc
 class RegisterUserServiceTest {
     @Autowired
     private RegisterUserService registerUserService;
@@ -28,8 +40,8 @@ class RegisterUserServiceTest {
     private RegisterUser fishUser() {
         var fishUser = new RegisterUser();
         fishUser.setEmail("fish@fishmail.fish");
-        fishUser.setPassword("fish");
-        fishUser.setRepitePassword("fish");
+        fishUser.setPassword("fishfish");
+        fishUser.setRepitePassword("fishfish");
         fishUser.setNickname("Fish");
         return fishUser;
     }
@@ -52,7 +64,7 @@ class RegisterUserServiceTest {
     @Test
     public void testRegisterUserPasswordDontMatch() {
         var fishUser = fishUser();
-        fishUser.setPassword("fishfish");
+        fishUser.setPassword("fishfishfish");
         ResponseEntity<String> responseResult = registerUserService.registerUser(fishUser);
         assertEquals(responseResult.getBody(), appSettings.getRegisterResponse().getPasswordsDontMatch());
     }
@@ -61,8 +73,8 @@ class RegisterUserServiceTest {
     public void testRegisterUserIsPresentAndNotVerefiedAndNotCorrectPassword() {
         var fishUser = fishUser();
         registerUserService.registerUser(fishUser);
-        fishUser.setPassword("fishfish");
-        fishUser.setRepitePassword("fishfish");
+        fishUser.setPassword("fishfishfish");
+        fishUser.setRepitePassword("fishfishfish");
         ResponseEntity<String> responseResult = registerUserService.registerUser(fishUser);
         assertEquals(responseResult.getBody(), appSettings.getErrorResponseServer().getUserPasswordNotCorrect());
     }
@@ -113,4 +125,5 @@ class RegisterUserServiceTest {
                 .userVerified(fishUser.getEmail(), "AAAAAAAAA");
         assertEquals(responseResult.getBody(), appSettings.getErrorResponseServer().getUserNotFound());
     }
+
 }
