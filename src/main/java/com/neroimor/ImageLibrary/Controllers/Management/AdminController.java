@@ -1,6 +1,8 @@
 package com.neroimor.ImageLibrary.Controllers.Management;
 
+import com.neroimor.ImageLibrary.Models.UsersModels.ChangeDataUser;
 import com.neroimor.ImageLibrary.Services.Admin.AdminService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ public class AdminController {
         return adminService.deleteUser(email);
     }
 
-    @PostMapping("/editUserData")
-    public ResponseEntity<String> editUser() {
-        return ResponseEntity.ok("Updated user");
+    @PostMapping("/editUserData/{email}")
+    public ResponseEntity<String> editUser(@Valid @RequestBody ChangeDataUser changeDataUser, @PathVariable String email) {
+        return adminService.editUserData(changeDataUser,email);
     }
 
     @PostMapping

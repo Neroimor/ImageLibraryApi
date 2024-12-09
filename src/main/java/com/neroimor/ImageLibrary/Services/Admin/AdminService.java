@@ -2,6 +2,7 @@ package com.neroimor.ImageLibrary.Services.Admin;
 
 import com.neroimor.ImageLibrary.Components.ErrorComoponent.DataError;
 import com.neroimor.ImageLibrary.Components.Properties.AdminSettings;
+import com.neroimor.ImageLibrary.Models.UsersModels.ChangeDataUser;
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,4 +41,26 @@ public class AdminService {
           return dataError.dataAccessError(e);
         }
     }
+
+    public ResponseEntity<String> editUserData(ChangeDataUser changeDataUser, String email){
+        try {
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isPresent()) {
+                var userNew = user.get();
+                editUser(changeDataUser, userNew);
+                return ResponseEntity.status(HttpStatus.OK).body(adminSettings.getSettingOperation().getEdit());
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(adminSettings.getSettingOperation().getUserNotFound());
+            }
+        } catch (DataAccessException e) {
+            return dataError.dataAccessError(e);
+        }
+    }
+    private void editUser(ChangeDataUser changeDataUser, User user){
+        user.setNickname(changeDataUser.getNickname());
+        user.setPassword(changeDataUser.getPassword());
+    }
+
+
 }
