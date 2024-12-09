@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("/api/admin")
 @Slf4j
 public class AdminController {
 
@@ -32,13 +32,13 @@ public class AdminController {
         return adminService.editUserData(changeDataUser,email);
     }
 
-    @PostMapping
+    @PostMapping("/ToAdmin")
     public ResponseEntity<String> changeRoleToAdmin(@RequestParam String email) {
         log.info("Начато изменение роли пользователя с пользователя на админа");
         return adminService.userToAdmin(email);
     }
 
-    @PostMapping
+    @PostMapping("/ToUser")
     public ResponseEntity<String> changeRoleToUser(@RequestParam String email) {
         log.info("Начато изменение роли пользователя с админа на пользователя");
         return adminService.adminToUser(email);
