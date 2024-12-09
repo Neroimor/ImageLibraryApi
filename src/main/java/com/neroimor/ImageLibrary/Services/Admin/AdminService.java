@@ -35,13 +35,16 @@ public class AdminService {
         try {
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
+                log.info("Пользователь найден");
                 userRepository.delete(user.get());
+                log.info("Пользователь удален");
                 return ResponseEntity
                         .status(HttpStatus.OK).body(
                                 adminSettings
                                         .getSettingOperation()
                                         .getDeleted());
             } else {
+                log.info("Пользователь не найден");
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
                         .body(adminSettings
@@ -57,15 +60,18 @@ public class AdminService {
         try {
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
+                log.info("Пользователь найден");
                 var userNew = user.get();
                 editUser(changeDataUser, userNew);
                 userRepository.save(userNew);
+                log.info("Пользователь изменен");
                 return ResponseEntity
                         .status(HttpStatus.OK).body(
                                 adminSettings
                                         .getSettingOperation()
                                         .getEdit());
             } else {
+                log.info("Пользователь не найден");
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND).body(
                                 adminSettings
@@ -97,14 +103,17 @@ public class AdminService {
 
         final Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
+            log.info("Пользователь найден ");
             user.get().setROLE(role);
             userRepository.save(user.get());
+            log.info("Роль пользователя изменена на {role}");
             return ResponseEntity
                     .status(HttpStatus.OK).body(
                             adminSettings
                                     .getSettingRole()
                                     .getUserChangeRole() + role);
         } else {
+            log.info("Пользователь не найден");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     adminSettings
                             .getSettingOperation()
