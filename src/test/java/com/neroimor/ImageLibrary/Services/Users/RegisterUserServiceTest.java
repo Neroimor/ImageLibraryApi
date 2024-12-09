@@ -2,28 +2,15 @@ package com.neroimor.ImageLibrary.Services.Users;
 
 import com.neroimor.ImageLibrary.Components.Properties.AppSettings;
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
-import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 
 @SpringBootTest

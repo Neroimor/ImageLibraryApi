@@ -2,17 +2,14 @@ package com.neroimor.ImageLibrary.Configuration.Security;
 
 import com.neroimor.ImageLibrary.Components.JWTComponent.JwtAuthenticationFilter;
 import com.neroimor.ImageLibrary.Components.JWTComponent.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -27,6 +24,7 @@ public class SecurityConfiguration {
     //Connecting a bean for token generation and verification
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
     public SecurityConfiguration(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -54,6 +52,7 @@ public class SecurityConfiguration {
                                 "/api/auth/**",
                                 "/api/reg/**")// Разрешаем доступ к этим маршрутам без авторизации
                         .permitAll()  // Allow access to these routes without authorization
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest() //Requires authorization
                         .authenticated()  // Все остальные маршруты требуют авторизации
                 )

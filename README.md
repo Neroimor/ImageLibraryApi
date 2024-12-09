@@ -67,6 +67,18 @@ settings-register:
     unauthorized: "Неверный логин или пароль"
     user-not-found: "Пользователь не найден"
     user-not-verified: "Пользователь не верифицирован"
+    
+setting-admin:
+  setting-operation:
+    deleted: "Пользователь удален"
+    edit: "Данные пользователя обнавлены"
+    user-not-found: "Пользователь не найден"
+  setting-role:
+    role-admin: "ADMIN"
+    role-user: "USER"
+    user-change-role: "Роль сменена на "
+
+
 ```
 Далее надо создать таблицу в базе данных (используется PostgresSQL)
 ```sql
