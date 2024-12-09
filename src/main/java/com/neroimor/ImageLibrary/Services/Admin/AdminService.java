@@ -11,16 +11,19 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 public class AdminService {
 
     private final UserRepository userRepository;
     private final AdminSettings adminSettings;
     private final DataError dataError;
+
     @Autowired
     public AdminService(UserRepository userRepository, UserRepository userRepository1, AdminSettings adminSettings, DataError dataError) {
         this.userRepository = userRepository1;
@@ -33,31 +36,87 @@ public class AdminService {
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
                 userRepository.delete(user.get());
-                return ResponseEntity.status(HttpStatus.OK).body(adminSettings.getSettingOperation().getDeleted());
-            }else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(adminSettings.getSettingOperation().getUserNotFound());
-            }
-        } catch (DataAccessException e) {
-          return dataError.dataAccessError(e);
-        }
-    }
-
-    public ResponseEntity<String> editUserData(ChangeDataUser changeDataUser, String email){
-        try {
-            Optional<User> user = userRepository.findByEmail(email);
-            if (user.isPresent()) {
-                var userNew = user.get();
-                editUser(changeDataUser, userNew);
-                return ResponseEntity.status(HttpStatus.OK).body(adminSettings.getSettingOperation().getEdit());
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(adminSettings.getSettingOperation().getUserNotFound());
+                return ResponseEntity
+                        .status(HttpStatus.OK).body(
+                                adminSettings
+                                        .getSettingOperation()
+                                        .getDeleted());
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(adminSettings
+                                .getSettingOperation()
+                                .getUserNotFound());
             }
         } catch (DataAccessException e) {
             return dataError.dataAccessError(e);
         }
     }
-    private void editUser(ChangeDataUser changeDataUser, User user){
+
+    public ResponseEntity<String> editUserData(ChangeDataUser changeDataUser, String email) {
+        try {
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isPresent()) {
+                var userNew = user.get();
+                editUser(changeDataUser, userNew);
+                userRepository.save(userNew);
+                return ResponseEntity
+                        .status(HttpStatus.OK).body(
+                                adminSettings
+                                        .getSettingOperation()
+                                        .getEdit());
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND).body(
+                                adminSettings
+                                        .getSettingOperation()
+                                        .getUserNotFound());
+            }
+        } catch (DataAccessException e) {
+            return dataError.dataAccessError(e);
+        }
+    }
+
+    public ResponseEntity<String> userToAdmin(String email) {
+        return changeRole(email,
+                adminSettings
+                        .getSettingRole()
+                        .getRoleAdmin());
+    }
+
+    public ResponseEntity<String> adminToUser(String email) {
+        return changeRole(email,
+                adminSettings
+                        .getSettingRole()
+                        .getRoleUser());
+    }
+
+    private ResponseEntity<String> changeRole(String email, String role) {
+       try {
+
+
+        final Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            user.get().setROLE(role);
+            userRepository.save(user.get());
+            return ResponseEntity
+                    .status(HttpStatus.OK).body(
+                            adminSettings
+                                    .getSettingRole()
+                                    .getUserChangeRole() + role);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    adminSettings
+                            .getSettingOperation()
+                            .getUserNotFound());
+        }
+       } catch (DataAccessException e) {
+           return dataError.dataAccessError(e);
+       }
+    }
+
+
+    private void editUser(ChangeDataUser changeDataUser, User user) {
         user.setNickname(changeDataUser.getNickname());
         user.setPassword(changeDataUser.getPassword());
     }

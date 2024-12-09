@@ -29,12 +29,12 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<String> changeRoleToAdmin() {
-        return ResponseEntity.ok("Change role to admin");
+    public ResponseEntity<String> changeRoleToAdmin(@RequestParam String email) {
+        return adminService.userToAdmin(email);
     }
 
     @PostMapping
-    public ResponseEntity<String> changeRoleToUser() {
-        return ResponseEntity.ok("Changed role to admin");
+    public ResponseEntity<String> changeRoleToUser(@RequestParam String email) {
+        return adminService.adminToUser(email);
     }
 }

@@ -23,7 +23,6 @@ public class AdminSettings {
     public static class SettingRole {
         private String roleAdmin;
         private String roleUser;
-        private String adminChange;
-        private String userChange;
+        private String userChangeRole;
     }
 }

@@ -76,8 +76,8 @@ setting-admin:
   setting-role:
     role-admin: "ADMIN"
     role-user: "USER"
-    admin-change: "Роль сменена на Админа"
-    user-change: "Роль сменена на Пользователя"
+    user-change-role: "Роль сменена на "
+
 
 ```
 Далее надо создать таблицу в базе данных (используется PostgresSQL)
