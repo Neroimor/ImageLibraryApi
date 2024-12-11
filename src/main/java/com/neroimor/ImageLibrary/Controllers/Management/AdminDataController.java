@@ -1,5 +1,6 @@
 package com.neroimor.ImageLibrary.Controllers.Management;
 
+import com.neroimor.ImageLibrary.Models.PageData.PagesDataInfo;
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Models.UsersModels.UserData;
 import com.neroimor.ImageLibrary.Services.Admin.GetUserService;
@@ -27,10 +28,18 @@ public class AdminDataController {
         log.info("Получение пользователя по email");
         return getUserService.getUser(email);
     }
+
     @GetMapping("/getAllUser")
     public List<UserData> getAllUserData(@RequestParam int page, @RequestParam int size){
         log.info("Начато получение всех пользователей");
         return getUserService.getAllUsers(page, size);
     }
+
+    @GetMapping
+    public PagesDataInfo getPageData(@RequestParam int page, @RequestParam int size){
+        log.info("Начато получение данных о количестве страниц и данных");
+        return getUserService.getPagesDataInfo(page,size);
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.neroimor.ImageLibrary.Services.Admin;
 
 import com.neroimor.ImageLibrary.Components.ErrorComoponent.DataError;
 import com.neroimor.ImageLibrary.Components.Properties.AdminSettings;
+import com.neroimor.ImageLibrary.Models.PageData.PagesDataInfo;
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Models.UsersModels.UserData;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
@@ -62,6 +63,8 @@ public class GetUserService {
             List<User> users = userRepository.findAll();
             log.info("Все пользователи найдены");
             return users.stream()
+                    .sorted((u1,u2)->
+                            u2.getCreated_at().compareTo(u1.getCreated_at()))
                     .map(s -> {
                         var user = new UserData();
                         user.setEmail(s.getEmail());
@@ -72,5 +75,18 @@ public class GetUserService {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    public PagesDataInfo getPagesDataInfo(int page, int size) {
+        log.info("Начато полученния данных из базы данных");
+        long totalElements = userRepository.count();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+        PagesDataInfo pagesDataInfo = new PagesDataInfo();
+        pagesDataInfo.setTotalElements(totalElements);
+        pagesDataInfo.setTotalPages(totalPages);
+        pagesDataInfo.setCurrentPage(page);
+        pagesDataInfo.setPageSize(size);
+        log.info("Расчет окончен");
+        return pagesDataInfo;
     }
 }
