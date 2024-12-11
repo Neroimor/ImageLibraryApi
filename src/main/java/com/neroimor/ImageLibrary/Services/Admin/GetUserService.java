@@ -38,7 +38,9 @@ public class GetUserService {
 
     public ResponseEntity<String> getUser(String email) {
         try {
+
             Optional<User> user = userRepository.findByEmail(email);
+            log.info("Пользователь получен и отправлен");
             return user.map(value
                     -> ResponseEntity.status(HttpStatus.OK).body(DataTransformation(value).toString())).orElseGet(()
                     -> ResponseEntity.status(HttpStatus.OK).body(adminSettings.getSettingOperation().getUserNotFound()));
