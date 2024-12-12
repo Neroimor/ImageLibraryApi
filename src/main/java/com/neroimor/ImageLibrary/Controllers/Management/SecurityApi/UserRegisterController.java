@@ -1,7 +1,7 @@
-package com.neroimor.ImageLibrary.Controllers.Management;
+package com.neroimor.ImageLibrary.Controllers.Management.SecurityApi;
 
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
-import com.neroimor.ImageLibrary.Services.Users.RegisterUserService;
+import com.neroimor.ImageLibrary.Services.Users.Security.RegisterUserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

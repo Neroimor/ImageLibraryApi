@@ -1,12 +1,11 @@
 package com.neroimor.ImageLibrary.Services.Admin;
 
 import com.neroimor.ImageLibrary.Components.Properties.AdminSettings;
-import com.neroimor.ImageLibrary.Components.Properties.AppSettings;
 import com.neroimor.ImageLibrary.Models.UsersModels.ChangeDataUser;
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
-import com.neroimor.ImageLibrary.Services.Users.RegisterUserService;
+import com.neroimor.ImageLibrary.Services.Users.Security.RegisterUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

@@ -1,4 +1,4 @@
-package com.neroimor.ImageLibrary.Services.Users;
+package com.neroimor.ImageLibrary.Services.Users.Security;
 
 import com.neroimor.ImageLibrary.Components.ErrorComoponent.DataError;
 import com.neroimor.ImageLibrary.Components.Password.PasswordComponent;

@@ -1,11 +1,11 @@
-package com.neroimor.ImageLibrary.Controllers.Management;
+package com.neroimor.ImageLibrary.Controllers.Management.AdminApi;
 
 import com.neroimor.ImageLibrary.Models.PageData.PagesDataInfo;
-import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import com.neroimor.ImageLibrary.Models.UsersModels.UserData;
 import com.neroimor.ImageLibrary.Services.Admin.GetUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +35,15 @@ public class AdminDataController {
         return getUserService.getAllUsers(page, size);
     }
 
-    @GetMapping
+    @GetMapping("/getPages")
     public PagesDataInfo getPageData(@RequestParam int page, @RequestParam int size){
         log.info("Начато получение данных о количестве страниц и данных");
         return getUserService.getPagesDataInfo(page,size);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> getPageData(){
+        return ResponseEntity.ok().body("test");
     }
 
 

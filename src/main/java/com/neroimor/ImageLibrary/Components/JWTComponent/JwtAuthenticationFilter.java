@@ -23,7 +23,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-
     private String extractTokenFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -39,14 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = extractTokenFromHeader(request);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            String role = jwtTokenProvider.getRoleFromToken(token);  // Получаем роль из токена
-            // Создаем роль для пользователя
-            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role); // Добавляем префикс 'ROLE_' если нужно
-            // Создаем объект Authentication с ролью
+            String email = jwtTokenProvider.getEmailFromToken(token);  // Получаем email из токена
+            String role = jwtTokenProvider.getRoleFromToken(token);     // Получаем роль из токена
+            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
             Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, List.of(authority));
-            // Устанавливаем аутентификацию в SecurityContext
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);  // Устанавливаем аутентификацию в контекст
         }
 
         filterChain.doFilter(request, response);

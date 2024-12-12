@@ -1,4 +1,4 @@
-package com.neroimor.ImageLibrary.Controllers.Management;
+package com.neroimor.ImageLibrary.Controllers.Management.SecurityApi;
 
 import org.springframework.web.bind.annotation.RestController;
 

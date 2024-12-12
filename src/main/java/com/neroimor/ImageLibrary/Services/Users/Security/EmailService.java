@@ -1,4 +1,4 @@
-package com.neroimor.ImageLibrary.Services.Users;
+package com.neroimor.ImageLibrary.Services.Users.Security;
 
 import com.neroimor.ImageLibrary.Models.UsersModels.User;
 import lombok.extern.slf4j.Slf4j;

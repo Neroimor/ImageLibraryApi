@@ -4,6 +4,8 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -19,6 +22,7 @@ public class JwtTokenProvider {
     private SecretKey secretKey;
 
     // Инициализация secretKey на основе строки jwtSecret
+    @PostConstruct
     private void init() {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }

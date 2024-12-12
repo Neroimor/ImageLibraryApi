@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -42,17 +43,15 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(ign -> ign
-                        .ignoringRequestMatchers(
-                                "/api/auth/**",  //отключает CSRF-защиту для некоторых эндпоинтов.
-                                "/api/reg/**"))//disables CSRF protection for some endpoints.
-
+                .csrf(AbstractHttpConfigurer::disable  // Отключаем CSRF защиту глобально для всех маршрутов
+                         )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/reg/**")// Разрешаем доступ к этим маршрутам без авторизации
                         .permitAll()  // Allow access to these routes without authorization
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/**").hasRole("USER")
                         .anyRequest() //Requires authorization
                         .authenticated()  // Все остальные маршруты требуют авторизации
                 )

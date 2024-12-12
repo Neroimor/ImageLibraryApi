@@ -3,6 +3,8 @@ package com.neroimor.ImageLibrary.Services.Users;
 import com.neroimor.ImageLibrary.Components.Properties.AppSettings;
 import com.neroimor.ImageLibrary.Models.UsersModels.RegisterUser;
 import com.neroimor.ImageLibrary.Repository.UserRepository;
+import com.neroimor.ImageLibrary.Services.Users.Security.LoginService;
+import com.neroimor.ImageLibrary.Services.Users.Security.RegisterUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
