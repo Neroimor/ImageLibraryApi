@@ -1,4 +1,4 @@
-package com.neroimor.ImageLibrary.Controllers.Management;
+package com.neroimor.ImageLibrary.Controllers.Management.AdminApi;
 
 import com.neroimor.ImageLibrary.Models.UsersModels.ChangeDataUser;
 import com.neroimor.ImageLibrary.Services.Admin.AdminService;

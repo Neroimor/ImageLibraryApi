@@ -1,19 +1,15 @@
-package com.neroimor.ImageLibrary.Controllers.Management;
+package com.neroimor.ImageLibrary.Controllers.Management.SecurityApi;
 
 
 import com.neroimor.ImageLibrary.Components.JWTComponent.JwtTokenProvider;
 import com.neroimor.ImageLibrary.Models.UsersModels.LoginData;
-import com.neroimor.ImageLibrary.Models.UsersModels.User;
-import com.neroimor.ImageLibrary.Services.Users.LoginService;
-import com.neroimor.ImageLibrary.Services.Users.RegisterUserService;
+import com.neroimor.ImageLibrary.Services.Users.Security.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
