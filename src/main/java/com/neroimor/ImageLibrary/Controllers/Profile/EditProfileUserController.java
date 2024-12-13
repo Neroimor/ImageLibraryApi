@@ -17,24 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class EditProfileUserController {
 
     private final EditAccountService editAccountService;
-    private final UserVerification userVerification;
+
 
     @Autowired
     public EditProfileUserController(EditAccountService editAccountService, UserVerification userVerification) {
         this.editAccountService = editAccountService;
-        this.userVerification = userVerification;
     }
 
     @PutMapping("/edit/{nickname}")
     public ResponseEntity<String> editProfileNickname(@PathVariable String nickname) {
-        // Получение текущего аутентифицированного пользователя
-        String currentUsername = userVerification.getCurrentUsername();
-        log.info("Current username: " + currentUsername);
-        if (currentUsername == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Необходимо авторизоваться");
-        }
-
+        log.info("Начата смена nickname");
         // Возвращаем email пользователя, а не строку "currentUsername"
-        return ResponseEntity.ok(currentUsername);
+        return editAccountService.editNickname(nickname);
     }
 }
