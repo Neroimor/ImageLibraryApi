@@ -13,6 +13,10 @@ public class EditorUser {
     @Data
     public static class SettingProfile{
         private String renickname;
-        private String renicknameError;
+        private String userError;
+        private String validationError;
+        private String repassword;
+        private String passwordError;
+        private String errorVerification;
     }
 }
