@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -29,5 +26,11 @@ public class EditProfileUserController {
         log.info("Начата смена nickname");
         // Возвращаем email пользователя, а не строку "currentUsername"
         return editAccountService.editNickname(nickname);
+    }
+    @PutMapping("/edit/password")
+    public ResponseEntity<String> editProfilePassword(@RequestParam String newPassword, @RequestParam String oldPassword) {
+        log.info("Начата смена пароля");
+        // Возвращаем email пользователя, а не строку "currentUsername"
+        return editAccountService.editPassword(newPassword, oldPassword);
     }
 }

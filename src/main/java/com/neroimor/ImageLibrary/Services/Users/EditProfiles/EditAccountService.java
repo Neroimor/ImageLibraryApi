@@ -48,8 +48,15 @@ public class EditAccountService {
 
     public ResponseEntity<String> editNickname(String nickname) {
         String currentUsername = userVerification.getCurrentUsername();
+        if (currentUsername == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return renickname(nickname, currentUsername);
+    }
+
+    public ResponseEntity<String> renickname(String nickname, String email) {
         try {
-            var user = userRepository.findByEmail(currentUsername);
+            var user = userRepository.findByEmail(email);
             log.info("Обработка пользователя (изменение никнейма)");
             if (user.isPresent()) {
                 if (!user.get().isVerified()) {
@@ -69,17 +76,23 @@ public class EditAccountService {
             return dataError.dataAccessError(e);
         }
     }
-
     public ResponseEntity<String> editPassword(String newPassword, String oldPassword) {
         String currentUsername = userVerification.getCurrentUsername();
+        if (currentUsername == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return repassword(newPassword,oldPassword,currentUsername);
+
+    }
+    public ResponseEntity<String> repassword(String newPassword, String oldPassword, String email) {
         try {
-            var user = userRepository.findByEmail(currentUsername);
+            var user = userRepository.findByEmail(email);
             log.info("Обработка пользователя (изменение пароля)");
             if (user.isPresent()) {
                 if (!user.get().isVerified()) {
                     return errorVerification(user);
                 }
-                if (passwordComponent.checkPassword(newPassword, user.get().getPassword())) {
+                if (passwordComponent.checkPassword(oldPassword, user.get().getPassword())) {
                     log.info("Пороль верный, начата смена пороля");
                     String finalPassword = passwordEncoder.encode(
                             newPassword + appSettings.getSettingUsers().getSalt());
@@ -105,8 +118,8 @@ public class EditAccountService {
     }
 
     private ResponseEntity<String> errorVerification(Optional<User> user) {
-            log.info("Пользователь не верефицирован");
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(editorUser.getSettingProfile().getErrorVerification());
+        log.info("Пользователь не верефицирован");
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(editorUser.getSettingProfile().getErrorVerification());
     }
 }
