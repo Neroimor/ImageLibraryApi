@@ -20,7 +20,10 @@ public class EditAccountService {
     private final EditorUser editorUser;
 
     @Autowired
-    public EditAccountService(UserRepository userRepository, UserVerification userVerification, DataError dataError, EditorUser editorUser) {
+    public EditAccountService(UserRepository userRepository,
+                              UserVerification userVerification,
+                              DataError dataError,
+                              EditorUser editorUser) {
         this.userRepository = userRepository;
         this.userVerification = userVerification;
         this.dataError = dataError;
@@ -33,13 +36,18 @@ public class EditAccountService {
 
             var user = userRepository.findByEmail(currentUsername);
             log.info("Обработка пользователя");
-            return user.map(value -> ResponseEntity.status(HttpStatus.OK)
-                            .body(editorUser.getSettingProfile().getRenickname()))
-                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .body(editorUser.getSettingProfile().getRenickname()));
+            if (user.isPresent()) {
+                user.get().setNickname(nickname);
+                userRepository.save(user.get());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(editorUser.getSettingProfile().getRenickname());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(editorUser.getSettingProfile().getRenicknameError());
+            }
+
         } catch (DataAccessException e) {
             return dataError.dataAccessError(e);
         }
-
     }
 }
